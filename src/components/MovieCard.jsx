@@ -14,6 +14,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import {IMG_URL} from "../hook/useEnv"
 import {Context} from "../context/Context"
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -21,6 +22,7 @@ import {Context} from "../context/Context"
 export default function MovieCard({item }) {
   const {likedList,setLikedList} = React.useContext(Context)
   const {savedList,setSavedList} = React.useContext(Context)
+  const navigate = useNavigate()
   function handleLikeBtnClick(){
     const likeData = likedList.findIndex(value => value.id == item.id)
     if(likeData == -1){
@@ -43,8 +45,11 @@ export default function MovieCard({item }) {
     }
 
   }
+  // function handleClickCard(e){
+  //   console.log(e.target.id);
+  // }
   return (
-    <Card className='rounded-md p-1' sx={{ maxWidth: 345 }}>
+    <Card className='rounded-md p-1 cursor-pointer' sx={{ maxWidth: 345 }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -65,6 +70,7 @@ export default function MovieCard({item }) {
         subheader={item.release_date}
       />
       <CardMedia
+        onClick={() => navigate(`movie/${item.id}`)}
         className='h-[350px]'
         component="img"
         height="194"
@@ -79,10 +85,10 @@ export default function MovieCard({item }) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton onClick={handleLikeBtnClick} aria-label="add to favorites">
-          <FavoriteIcon />
+        <IconButton id='like' onClick={handleLikeBtnClick} aria-label="add to favorites">
+          <FavoriteIcon/>
         </IconButton>
-        <IconButton onClick={handleSavedBtnClick} aria-label="share">
+        <IconButton id='save' onClick={handleSavedBtnClick} aria-label="share">
           <TurnedInIcon/>
         </IconButton>
       </CardActions>

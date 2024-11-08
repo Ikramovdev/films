@@ -7,9 +7,10 @@ import Button from '@mui/material/Button';
 import { NavLink } from 'react-router-dom';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import { Badge } from '@mui/material';
+import { Autocomplete, Badge, TextField } from '@mui/material';
 import { PATH } from '../hook/usePath';
 import { Context } from '../context/Context';
+import SearchIcon from '@mui/icons-material/Search';
 
 const navItems = [
     {
@@ -35,10 +36,17 @@ const navItems = [
 ];
 
 function Navbar() {
-    const {likedList,setLikedList} = React.useContext(Context)
-    const {savedList,setSavedList} = React.useContext(Context)
+    const [showInput,setShowInput] = React.useState(false)
+    const { likedList, setLikedList } = React.useContext(Context)
+    const { savedList, setSavedList } = React.useContext(Context)
+    const [searchResult, setSearchResult] = React.useState([
+        {
+            label: "Film",
+            year: "2022"
+        }
+    ])
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex',position:"relative" }}>
             <AppBar className='!bg-[#000000eb]'>
                 <Toolbar>
                     <Typography
@@ -48,6 +56,7 @@ function Navbar() {
                     >
                         Movies
                     </Typography>
+                    <SearchIcon onClick={() => setShowInput(!showInput)} className={`scale-[1.5] mr-5 cursor-pointer`}/>
                     <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                         {navItems.map((item) => (
                             <Button key={item.id} sx={{ color: '#fff' }}>
@@ -55,20 +64,28 @@ function Navbar() {
                             </Button>
                         ))}
                     </Box>
-                    <Box sx={{display:"flex", gap:"20px", marginLeft:"30px"}}>
-                        <Button variant='outlined' sx={{ borderRadius: "50%", borderColor:"white" }}>
+                    <Box sx={{ display: "flex", gap: "20px", marginLeft: "30px" }}>
+                        <Button variant='outlined' sx={{ borderRadius: "50%", borderColor: "white" }}>
                             <Badge showZero badgeContent={likedList.length} color="error">
-                                <ThumbUpIcon sx={{color:"white"}} />
+                                <ThumbUpIcon sx={{ color: "white" }} />
                             </Badge>
                         </Button>
-                        <Button variant='outlined' sx={{ borderRadius: "50%", borderColor:"white" }}>
+                        <Button variant='outlined' sx={{ borderRadius: "50%", borderColor: "white" }}>
                             <Badge showZero badgeContent={savedList.length} color="primary">
-                                <BookmarkIcon sx={{color:"white"}} />
+                                <BookmarkIcon sx={{ color: "white" }} />
                             </Badge>
                         </Button>
                     </Box>
                 </Toolbar>
             </AppBar>
+            <Autocomplete
+                className={`${showInput? "top-[73px] right-[350px]":"top-[-100px] right-[350px]"} absolute  duration-300 z-50`}
+                size='small'
+                disablePortal
+                options={searchResult}
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField size='small' sx={{ backgroundColor: "white", borderRadius: "5px" }} variant='filled' {...params} label="Search Movie" />}
+            />
         </Box>
     );
 }
