@@ -34,6 +34,7 @@ const navItems = [
         to: PATH.upcoming
     },
 ];
+ 
 
 function Navbar() {
     const [showInput,setShowInput] = React.useState(false)
